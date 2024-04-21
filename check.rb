@@ -62,19 +62,19 @@ def calculate_days_and_find_closest(check_date)
   closest_deadlines = []
 
   if days_to_monthly == min_days
-    closest_deadlines << "месячная (через #{min_days} дней)"
+    closest_deadlines << "#{check_monthly(check_date)} месячная (через #{min_days} дней)"
   end
   if days_to_quarter10 == min_days
-    closest_deadlines << "квартальная 10 рабочих (через #{min_days} дней)"
+    closest_deadlines << "#{check_quarter(10, check_date)} квартальная 10 рабочих (через #{min_days} дней)"
   end
   if days_to_quarter30 == min_days
-    closest_deadlines << "квартальная 30 календарных (через #{min_days} дней)"
+    closest_deadlines << "#{check_quarter(30, check_date)} квартальная 30 календарных (через #{min_days} дней)"
   end
   if days_to_yearly10 == min_days
-    closest_deadlines << "годовая 10 рабочих (через #{min_days} дней)"
+    closest_deadlines << "#{check_yearly(10, check_date)} годовая 10 рабочих (через #{min_days} дней)"
   end
   if days_to_yearly30 == min_days
-    closest_deadlines << "годовая 30 календарных (через #{min_days} дней)"
+    closest_deadlines << "#{check_yearly(30, check_date)} годовая 30 календарных (через #{min_days} дней)"
   end
 
   closest_deadlines.each do |deadline|
