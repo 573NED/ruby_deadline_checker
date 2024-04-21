@@ -23,10 +23,6 @@ def count (type, number, input_date)
   today
 end
 
-def days_left
-
-end
-
 def check_monthly_report(today)
   deadline = count(1, 10, today)
   if today <= deadline
@@ -54,14 +50,17 @@ def check_quarter(type, today)
   end
 end
 
-check_date = Time.parse("2024-01-21")
+check_date = Time.parse("2024-01-15")
 check_date = Date.new(check_date.year, check_date.month, check_date.day)
 monthly_deadline = check_monthly_report(check_date)
 quarter10_deadline = check_quarter(10, check_date)
 quarter30_deadline = check_quarter(30, check_date)
 
+tempereddddd = (quarter10_deadline - check_date).to_i
+
 Timecop.freeze(check_date) do
   puts "крайний день сдачи месячной      отчетности #{monthly_deadline}"
   puts "крайний день сдачи квартальной10 отчетности #{quarter10_deadline}"
   puts "крайний день сдачи квартальной30 отчетности #{quarter30_deadline}"
+  puts tempereddddd
 end
