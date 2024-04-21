@@ -23,6 +23,10 @@ def count (type, number, input_date)
   today
 end
 
+def days_left
+
+end
+
 def check_monthly_report(today)
   deadline = count(1, 10, today)
   if today <= deadline
@@ -43,14 +47,14 @@ def check_quarter(type, today)
     if today <= deadline
       result = deadline
     else
-      result = count(1, 10, today.next_month)
+      result = count(1, 10, today)
     end
   else
     count(0, 30, today)
   end
 end
 
-check_date = Time.parse("2024-07-14")
+check_date = Time.parse("2024-01-21")
 check_date = Date.new(check_date.year, check_date.month, check_date.day)
 monthly_deadline = check_monthly_report(check_date)
 quarter10_deadline = check_quarter(10, check_date)
