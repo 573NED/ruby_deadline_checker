@@ -38,7 +38,7 @@ def check_yearly (ndays, today)
   day = Date.new(today.year, 1, 1)
   if ndays == 10 then
     result = check_monthly(day) 
-    (result - today).to_i <= 0 ? result = check_monthly(result.next_year) : result
+    (result - today).to_i <= 0 ? result = check_monthly(day.next_year) : result
   else
     result = count_date(30, day)
     (result - today).to_i <= 0 ? result = count_date(30, result.next_year) : result
