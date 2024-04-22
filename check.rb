@@ -24,22 +24,14 @@ end
 
 def check_monthly(today)
   result = count_date(10, today)
-  if result <= today
-    result = count_date(10, today.next_month)
-  else
-    result
-  end
+  result <= today ? result = count_date(10, today.next_month) : result
 end
 
 def check_quarter(ndays, today)
   while today.month != 4 && today.month != 7 && today.month != 10
     today = today.next_month
   end
-  if ndays == 10 then
-    check_monthly(today)
-  else
-    count_date(30, today)
-  end
+  ndays == 10 ? check_monthly(today) : count_date(30, today)
 end
 
 def check_yearly (ndays, today)
@@ -60,15 +52,8 @@ def calculate_days_and_find_closest(check_date)
   days_to_yearly10 = (check_yearly(10, check_date) - check_date).to_i
   days_to_yearly30 = (check_yearly(30, check_date) - check_date).to_i
 
-  puts days_to_monthly
-  puts days_to_quarter10
-  puts days_to_quarter30
-  puts days_to_yearly10
-  puts days_to_yearly30
-
   min_days = [days_to_monthly, days_to_quarter10, days_to_quarter30, days_to_yearly10, days_to_yearly30].min
   closest_deadlines = []
-
 
   days_to_monthly == min_days ? closest_deadlines << "#{check_monthly(check_date)} месячная (через #{min_days} дней)" : nil
   days_to_quarter10 == min_days ? closest_deadlines << "#{check_quarter(10, check_date)} квартальная 10 рабочих (через #{min_days} дней)" : nil
