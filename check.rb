@@ -53,8 +53,8 @@ def calculate_days_and_find_closest(check_date)
   days_to_yearly30 = (check_yearly(30, check_date) - check_date).to_i
 
   min_days = [days_to_monthly, days_to_quarter10, days_to_quarter30, days_to_yearly10, days_to_yearly30].min
+  
   closest_deadlines = []
-
   days_to_monthly == min_days ? closest_deadlines << "#{check_monthly(check_date)} месячная (через #{min_days} дней)" : nil
   days_to_quarter10 == min_days ? closest_deadlines << "#{check_quarter(10, check_date)} квартальная 10 рабочих (через #{min_days} дней)" : nil
   days_to_quarter30 == min_days ? closest_deadlines << "#{check_quarter(30, check_date)} квартальная 30 календарных (через #{min_days} дней)" : nil
@@ -66,13 +66,6 @@ def calculate_days_and_find_closest(check_date)
   end
 end
 
-check_date = Time.parse("2024-12-31")
-check_date = Date.new(check_date.year, check_date.month, check_date.day)
-
-Timecop.freeze(check_date) do
-  calculate_days_and_find_closest(check_date)
-end
-
-# check_date = Time.now
-# date = Date.new(check_date.year, check_date.month, check_date.day)
-# calculate_days_and_find_closest(date)
+check_date = Time.now
+date = Date.new(check_date.year, check_date.month, check_date.day)
+calculate_days_and_find_closest(date)
