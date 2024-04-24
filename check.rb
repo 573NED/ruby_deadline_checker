@@ -1,9 +1,11 @@
 require 'timecop'
 require 'json'
+require 'net/http'
 
-def is_holiday?(check_date)
-  holidays = JSON.parse(File.read('consultant2024.json'))['holidays'] + JSON.parse(File.read('consultant2025.json'))['holidays']
-  holidays.include?(check_date.strftime("%Y-%m-%d"))
+def holiday?(check_date)
+  uri = URI("https://isdayoff.ru/#{check_date}")
+  result = Net::HTTP.get(uri)
+  result == '1'
 end
 
 def count_date (number, day)
@@ -12,7 +14,7 @@ def count_date (number, day)
     workdays = 0
     while workdays < number do
       day += 1
-      next if is_holiday?(day)
+      next if holiday?(day)
       workdays += 1
     end
   else 
@@ -31,7 +33,7 @@ def check_quarter(ndays, today)
   while today.month != 4 && today.month != 7 && today.month != 10
     today = today.next_month
   end
-  ndays == 10 ? check_monthly(today) : count_date(30, today)
+  ndays == 10 ? check_monthly(today) : count_date(30, today) 
 end
 
 def check_yearly (ndays, today)
@@ -55,17 +57,24 @@ def calculate_days_and_find_closest(check_date)
   min_days = [days_to_monthly, days_to_quarter10, days_to_quarter30, days_to_yearly10, days_to_yearly30].min
   
   closest_deadlines = []
-  days_to_monthly == min_days ? closest_deadlines << "#{check_monthly(check_date)} месячная (через #{min_days} дней)" : nil
-  days_to_quarter10 == min_days ? closest_deadlines << "#{check_quarter(10, check_date)} квартальная 10 рабочих (через #{min_days} дней)" : nil
-  days_to_quarter30 == min_days ? closest_deadlines << "#{check_quarter(30, check_date)} квартальная 30 календарных (через #{min_days} дней)" : nil
-  days_to_yearly10 == min_days ? closest_deadlines << "#{check_yearly(10, check_date)} годовая 10 рабочих (через #{min_days} дней)" : nil
-  days_to_yearly30 == min_days ? closest_deadlines << "#{check_yearly(30, check_date)} годовая 30 календарных (через #{min_days} дней)" : nil
+  closest_deadlines << "#{check_monthly(check_date)} месячная (через #{min_days} дней)" if days_to_monthly == min_days
+  closest_deadlines << "#{check_quarter(10, check_date)} квартальная 10 рабочих (через #{min_days} дней)" if days_to_quarter10 == min_days
+  closest_deadlines << "#{check_quarter(30, check_date)} квартальная 30 календарных (через #{min_days} дней)" if days_to_quarter30 == min_days
+  closest_deadlines << "#{check_yearly(10, check_date)} годовая 10 рабочих (через #{min_days} дней)" if days_to_yearly10 == min_days
+  closest_deadlines << "#{check_yearly(30, check_date)} годовая 30 календарных (через #{min_days} дней)" if days_to_yearly30 == min_days
 
   closest_deadlines.each do |deadline|
     puts deadline
   end
 end
 
-check_date = Time.now
-date = Date.new(check_date.year, check_date.month, check_date.day)
-calculate_days_and_find_closest(date)
+check_date = Time.parse("2023-12-31")
+check_date = Date.new(check_date.year, check_date.month, check_date.day)
+
+Timecop.freeze(check_date) do
+  calculate_days_and_find_closest(check_date)
+end
+
+# check_date = Time.now
+# date = Date.new(check_date.year, check_date.month, check_date.day)
+# calculate_days_and_find_closest(date)
