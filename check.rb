@@ -1,5 +1,4 @@
 require 'timecop'
-require 'json'
 require 'net/http'
 
 def holiday?(check_date)
@@ -68,13 +67,6 @@ def calculate_days_and_find_closest(check_date)
   end
 end
 
-check_date = Time.parse("2023-12-31")
-check_date = Date.new(check_date.year, check_date.month, check_date.day)
-
-Timecop.freeze(check_date) do
-  calculate_days_and_find_closest(check_date)
-end
-
-# check_date = Time.now
-# date = Date.new(check_date.year, check_date.month, check_date.day)
-# calculate_days_and_find_closest(date)
+check_date = Time.now
+date = Date.new(check_date.year, check_date.month, check_date.day)
+calculate_days_and_find_closest(date)
